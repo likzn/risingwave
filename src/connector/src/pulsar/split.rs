@@ -16,9 +16,8 @@ use anyhow::anyhow;
 use serde::{Deserialize, Serialize};
 
 use crate::base::SourceSplit;
-use crate::pulsar::PulsarEnumeratorOffset;
 use crate::pulsar::topic::ParsedTopic;
-
+use crate::pulsar::PulsarEnumeratorOffset;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PulsarSplit {
