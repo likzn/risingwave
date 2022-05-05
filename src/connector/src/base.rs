@@ -34,6 +34,8 @@ use crate::nexmark::{NexmarkSplit, NexmarkSplitEnumerator};
 use crate::pulsar::{PulsarSplit, PulsarSplitEnumerator};
 use crate::utils::AnyhowProperties;
 use crate::{kafka, kinesis, nexmark, pulsar, Properties};
+use crate::{kafka, kinesis, pulsar, Properties};
+use crate::pulsar::source::reader::PulsarSplitReader;
 
 const KAFKA_SOURCE: &str = "kafka";
 const KINESIS_SOURCE: &str = "kinesis";
@@ -85,6 +87,7 @@ pub enum SplitReaderImpl {
     Kafka(KafkaSplitReader),
     Kinesis(KinesisSplitReader),
     Nexmark(NexmarkSplitReader),
+    Pulsar(PulsarSplitReader),
 }
 
 impl SplitReaderImpl {
@@ -93,6 +96,7 @@ impl SplitReaderImpl {
             Self::Kafka(r) => r.next().await,
             Self::Kinesis(r) => r.next().await,
             Self::Nexmark(r) => r.next().await,
+            Self::Pulsar(r) => r.next().await,
         }
     }
 
@@ -102,6 +106,7 @@ impl SplitReaderImpl {
             KAFKA_SOURCE => Self::Kafka(KafkaSplitReader::new(config, state).await?),
             KINESIS_SOURCE => Self::Kinesis(KinesisSplitReader::new(config, state).await?),
             NEXMARK_SOURCE => Self::Nexmark(NexmarkSplitReader::new(config, state).await?),
+            PULSAR_SOURCE => Self::Pulsar(PulsarSplitReader::new(config, state).await?),
             _other => {
                 todo!()
             }
